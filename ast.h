@@ -16,7 +16,7 @@ typedef struct ASTNode {
     };
     struct ASTNode *next; // Next sibling for object/array elements
 
-    // New fields for relational conversion
+    // Fields for relational conversion
     char *table_name;
     char *parent_table;
     char *foreign_key;
@@ -25,8 +25,8 @@ typedef struct ASTNode {
 } ASTNode;
 
 // Function declarations
-ASTNode* create_object_node(ASTNode* children, const char* table_name);
-ASTNode* create_array_node(ASTNode* children, const char* table_name);
+ASTNode* create_object_node(ASTNode* children, const char* table_name, const char* parent_table, const char* foreign_key);
+ASTNode* create_array_node(ASTNode* children, const char* table_name, const char* parent_table, const char* foreign_key);
 ASTNode* create_string_node(char* str);
 ASTNode* create_number_node(int num);
 ASTNode* create_bool_node(int boolean);
@@ -36,5 +36,6 @@ ASTNode* append_to_array(ASTNode* list, ASTNode* node);
 void print_ast(ASTNode* node, int level);
 void free_ast(ASTNode* node);
 ASTNode* create_pair_node(char* key, ASTNode* value);
+void assign_ids(ASTNode* node);
 
 #endif

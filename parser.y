@@ -29,7 +29,7 @@ void yyerror(const char *s);
 
 %%
 
-json: value { root = $1; }
+json: value { root = $1; assign_ids(root); }
 ;
 
 value:
@@ -43,8 +43,8 @@ value:
 ;
 
 object:
-      LBRACE RBRACE                { $$ = create_object_node(NULL, "default"); }
-    | LBRACE pair_list RBRACE      { $$ = create_object_node($2, "default"); }
+      LBRACE RBRACE                { $$ = create_object_node(NULL, "default", NULL, NULL); }
+    | LBRACE pair_list RBRACE      { $$ = create_object_node($2, "default", NULL, NULL); }
 ;
 
 pair_list:
@@ -53,12 +53,28 @@ pair_list:
 ;
 
 pair:
-      STRING_TOKEN COLON value           { $$ = create_pair_node($1, $3); }
+      STRING_TOKEN COLON value           { 
+          $$ = create_pair_node($1, $3); 
+          // Set table name for array values based on the key
+          if ($3->type == ARRAY) {
+              char table_name[100];
+              snprintf(table_name, sizeof(table_name), "%s", $1);
+              $3->table_name = strdup(table_name);
+              $3->parent_table = strdup("default");
+              $3->foreign_key = strdup("parent_id");
+          }
+      }
 ;
 
 array:
-      LBRACKET RBRACKET            { $$ = create_array_node(NULL, "default_array"); }
-    | LBRACKET value_list RBRACKET { $$ = create_array_node($2, "default_array"); }
+      LBRACKET RBRACKET            { 
+          $$ = create_array_node(NULL, "default_array", NULL, NULL); 
+          $$->type = ARRAY;
+      }
+    | LBRACKET value_list RBRACKET { 
+          $$ = create_array_node($2, "default_array", NULL, NULL); 
+          $$->type = ARRAY;
+      }
 ;
 
 value_list:
