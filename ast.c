@@ -2,19 +2,29 @@
 #include <string.h>
 #include <stdio.h>
 
-ASTNode* create_object_node(ASTNode* children) {
+ASTNode* create_object_node(ASTNode* children, const char* table_name) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     node->type = OBJECT;
     node->children = children;
     node->next = NULL;
+    node->table_name = strdup(table_name);
+    node->parent_table = NULL;
+    node->foreign_key = NULL;
+    node->id = 0;
+    node->seq = 0;
     return node;
 }
 
-ASTNode* create_array_node(ASTNode* children) {
+ASTNode* create_array_node(ASTNode* children, const char* table_name) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     node->type = ARRAY;
     node->children = children;
     node->next = NULL;
+    node->table_name = strdup(table_name);
+    node->parent_table = NULL;
+    node->foreign_key = NULL;
+    node->id = 0;
+    node->seq = 0;
     return node;
 }
 
@@ -65,24 +75,16 @@ ASTNode* append_to_array(ASTNode* list, ASTNode* node) {
     return list;
 }
 
-ASTNode* create_pair_node(char* key, ASTNode* value) {
-    ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
-    node->type = STRING; // Assuming key is a string
-    node->str = strdup(key);
-    node->next = value; // Link to the value node
-    return node;
-}
-
 void print_ast(ASTNode* node, int level) {
     if (!node) return;
     for (int i = 0; i < level; i++) printf("  ");
     switch (node->type) {
         case OBJECT:
-            printf("Object\n");
+            printf("Object (Table: %s)\n", node->table_name);
             print_ast(node->children, level + 1);
             break;
         case ARRAY:
-            printf("Array\n");
+            printf("Array (Table: %s)\n", node->table_name);
             print_ast(node->children, level + 1);
             break;
         case STRING:
@@ -104,7 +106,18 @@ void print_ast(ASTNode* node, int level) {
 void free_ast(ASTNode* node) {
     if (!node) return;
     if (node->type == STRING) free(node->str);
+    if (node->table_name) free(node->table_name);
+    if (node->parent_table) free(node->parent_table);
+    if (node->foreign_key) free(node->foreign_key);
     free_ast(node->children);
     free_ast(node->next);
     free(node);
+}
+
+ASTNode* create_pair_node(char* key, ASTNode* value) {
+    ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
+    node->type = STRING; // Assuming key is a string
+    node->str = strdup(key);
+    node->next = value; // Link to the value node
+    return node;
 }

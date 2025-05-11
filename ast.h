@@ -15,11 +15,18 @@ typedef struct ASTNode {
         struct ASTNode *children; // For objects and arrays
     };
     struct ASTNode *next; // Next sibling for object/array elements
+
+    // New fields for relational conversion
+    char *table_name;
+    char *parent_table;
+    char *foreign_key;
+    int id;
+    int seq; // For array elements
 } ASTNode;
 
 // Function declarations
-ASTNode* create_object_node(ASTNode* children);
-ASTNode* create_array_node(ASTNode* children);
+ASTNode* create_object_node(ASTNode* children, const char* table_name);
+ASTNode* create_array_node(ASTNode* children, const char* table_name);
 ASTNode* create_string_node(char* str);
 ASTNode* create_number_node(int num);
 ASTNode* create_bool_node(int boolean);

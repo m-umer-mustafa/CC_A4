@@ -20,7 +20,7 @@ void yyerror(const char *s);
 }
 
 %token <str> STRING_TOKEN
-%token <num> NUMBER_TOKEN // Renamed from NUMBER
+%token <num> NUMBER_TOKEN
 %token <boolean> TRUE FALSE
 %token NULLL
 %token LBRACE RBRACE LBRACKET RBRACKET COLON COMMA
@@ -43,8 +43,8 @@ value:
 ;
 
 object:
-      LBRACE RBRACE                { $$ = create_object_node(NULL); }
-    | LBRACE pair_list RBRACE      { $$ = create_object_node($2); }
+      LBRACE RBRACE                { $$ = create_object_node(NULL, "default"); }
+    | LBRACE pair_list RBRACE      { $$ = create_object_node($2, "default"); }
 ;
 
 pair_list:
@@ -57,8 +57,8 @@ pair:
 ;
 
 array:
-      LBRACKET RBRACKET            { $$ = create_array_node(NULL); }
-    | LBRACKET value_list RBRACKET { $$ = create_array_node($2); }
+      LBRACKET RBRACKET            { $$ = create_array_node(NULL, "default_array"); }
+    | LBRACKET value_list RBRACKET { $$ = create_array_node($2, "default_array"); }
 ;
 
 value_list:

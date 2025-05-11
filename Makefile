@@ -34,6 +34,6 @@ main.o: main.c ast.h utils.h
 	$(CC) -c main.c $(CFLAGS)
 
 clean:
-	rm -f $(OBJ) out output.csv parser.tab.c parser.tab.h
+	rm -f $(OBJ) out output.csv parser.tab.c parser.tab.h scanner.c
 
 
