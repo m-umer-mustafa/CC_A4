@@ -11,7 +11,7 @@ This project parses a JSON file and converts it into relational CSV format.
 
 Run the tool with the following command:
 ```
-./json2relcsv <input.json>
+./out <input.json>
 ```
 
 ## Example
