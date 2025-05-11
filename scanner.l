@@ -39,8 +39,10 @@ int line = 1, col = 1;
 "true"            { yylval.boolean = 1; return TRUE; }
 "false"           { yylval.boolean = 0; return FALSE; }
 "null"            { return NULLL; }
-[ \t\n]+          { /* Ignore whitespace */ }
-.                { report_error("Invalid character", line, col); }
+
+[ \t]+            { col += yyleng; } // Ignore spaces and tabs
+"\n"              { line++; col = 1; } // Handle newlines and reset column
+
 
 %%
 

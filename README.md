@@ -1,18 +1,32 @@
-# JSON to Relational CSV
+# JSON to Relational CSV Converter
 
-This project parses a JSON file and converts it into relational CSV format.
+This tool converts JSON files into relational CSV tables using Flex and Bison. It handles nested JSON structures and converts them into multiple CSV files with appropriate foreign keys.
+
+## Features
+
+- Converts JSON objects to flat CSV tables
+- Handles nested objects and arrays
+- Generates relational tables with foreign keys
+- Supports streaming of large JSON files
+- Provides detailed error reporting
 
 ## How to Build
 
-1. Install **Flex** and **Bison**.
+1. Install **Flex** and **Bison**:
+   ```sh
+   sudo apt-get install flex bison gcc
 2. Run `make` to build the project.
 
 ## Usage
 
 Run the tool with the following command:
 ```
-./json2relcsv <input.json>
+./out <input.json> [--out-dir DIR]
 ```
+
+Option: 
+    --out-dir DIR: Specify the output directory for CSV files (default: current directory)
+
 
 ## Example
 
@@ -31,5 +45,9 @@ id,name,age
 
 ## Notes
 
-- This program builds an AST and streams CSV rows without large memory buffers.
-- It supports object, array, and scalar JSON structures.
+ - The tool assumes valid JSON input.
+ - All CSV files are written in the specified output directory.
+ - The tool assigns integer primary keys (id) and foreign keys (parent_id).
+ - JSON null values are represented as empty strings in CSV.
+
+ 

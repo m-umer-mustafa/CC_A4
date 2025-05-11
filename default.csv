@@ -1,2 +1,2 @@
-id,name,Ali,age,isStudent,hobbies,phoneNumbers
-3,Ali,age,19,true,,
+id,postId,author,comments
+6,101,,
